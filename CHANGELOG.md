@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 3.0.0+1 (ndux fork)
+
+* Support html 0.15.7 by replacing the removed top-level selector matcher with
+  csslib parsing and html's existing selector evaluator. The evaluator remains
+  an internal dependency because html has no public element-matching API.
+* Preserve invalid/unsupported selector handling and the existing rendering API.
+* Require Dart 3.6 and html 0.15.7 or later within the 0.15.x series.
+
 #### 3.0.0 *March 2025*
 
  - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.

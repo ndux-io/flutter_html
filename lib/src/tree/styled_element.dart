@@ -1,9 +1,11 @@
 import 'dart:collection';
 
+import 'package:csslib/parser.dart' as css;
 import 'package:flutter_html/src/style.dart';
 import 'package:html/dom.dart' as dom;
-//TODO(Sub6Resources): don't use the internal code of the html package as it may change unexpectedly.
-//ignore: implementation_imports
+// html has no public element-matching API. Keep its evaluator to preserve
+// selector semantics; regression tests cover this remaining internal dependency.
+// ignore: implementation_imports
 import 'package:html/src/query_selector.dart' as qs;
 import 'package:list_counter/list_counter.dart';
 
@@ -28,7 +30,12 @@ class StyledElement {
 
   bool matches(dom.Element element, String selector) {
     try {
-      return qs.matches(element, selector);
+      final errors = <css.Message>[];
+      final group = css.parseSelectorGroup(selector, errors: errors);
+      if (group == null || errors.isNotEmpty) {
+        return false;
+      }
+      return qs.SelectorEvaluator().matches(element, group);
     } catch (_) {
       return false;
     }
